@@ -1,0 +1,11 @@
+---
+- name: Backup home directory
+  hosts: all
+  become: yes
+
+  tasks:
+
+    - name: Archive /home
+      archive:
+        path: /home
+        dest: /tmp/home_backup.tar.gz

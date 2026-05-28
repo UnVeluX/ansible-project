@@ -1,0 +1,25 @@
+---
+- name: Update systems and reboot if required
+  hosts: all
+  become: yes
+
+  tasks:
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Upgrade packages
+      apt:
+        upgrade: dist
+      when: ansible_os_family == "Debian"
+
+    - name: Check if reboot is required
+      stat:
+        path: /var/run/reboot-required
+      register: reboot_required
+
+    - name: Reboot server
+      reboot:
+      when: reboot_required.stat.exists

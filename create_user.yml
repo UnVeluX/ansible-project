@@ -1,0 +1,29 @@
+---
+- name: Create user and force password change
+  hosts: all
+  become: yes
+
+  vars:
+    username: ansible
+    user_password: "TempPassword123!"
+
+  tasks:
+
+    - name: Create user
+      ansible.builtin.user:
+        name: "{{ username }}"
+        shell: /bin/bash
+        groups: sudo
+        append: yes
+        create_home: yes
+        password: "{{ user_password | password_hash('sha512') }}"
+
+    - name: Force password change on first login
+      ansible.builtin.command:
+        cmd: chage -d 0 {{ username }}
+
+    - name: Add reconnect reminder
+      ansible.builtin.lineinfile:
+        path: "/home/{{ username }}/.bashrc"
+        line: 'echo "Please reconnect your SSH session after changing your password."'
+        create: yes
