@@ -1,8 +1,22 @@
 ---
-- name: Test connectivity
+- name: Ping hosts and update packages
   hosts: all
-  gather_facts: false
+  become: yes
+  gather_facts: yes
 
   tasks:
-    - name: Ping hosts
+
+    - name: Ping the host
       ansible.builtin.ping:
+
+    - name: Update apt cache (Debian/Ubuntu)
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Update all packages (RedHat/CentOS)
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+      when: ansible_facts['os_family'] == "RedHat"
