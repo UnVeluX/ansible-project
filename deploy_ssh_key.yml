@@ -1,0 +1,16 @@
+---
+- name: Deploy Ansible SSH public key to hosts
+  hosts: all
+  become: yes
+
+  vars:
+    ssh_user: ansible
+    ssh_key: "{{ lookup('file', '/home/user/.ssh/id_ed25519.pub') }}"
+
+  tasks:
+
+    - name: Add SSH public key to authorized_keys
+      ansible.posix.authorized_key:
+        user: "{{ ssh_user }}"
+        key: "{{ ssh_key }}"
+        state: present
