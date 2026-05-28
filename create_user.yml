@@ -5,7 +5,7 @@
 
   vars:
     username: ansible
-    user_password: "TempPassword123!"
+    user_password_hash: "$6$zMog7L8rldXyUPE6$If5ilN.7sro33LnVZXzeJ.2HO1Qd.ESvWM2HUq7YLM1Qb/sLFBjEZ0Pgi1W5CTR7n8eSU3lg1.7TVmVlSoeUo."
 
   tasks:
 
@@ -16,7 +16,7 @@
         groups: sudo
         append: yes
         create_home: yes
-        password: "{{ user_password | password_hash('sha512') }}"
+        password: "{{ user_password_hash }}"
 
     - name: Force password change on first login
       ansible.builtin.command:
