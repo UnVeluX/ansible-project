@@ -1,33 +1,54 @@
 ---
-- name: Remove a Linux user safely
+- name: Safely remove Linux user (protected accounts included)
   hosts: all
   become: yes
 
-  vars_prompt:
+  vars:
+    username: "{{ username }}"
 
-    - name: username
-      prompt: "Enter the username to delete"
-      private: no
-
-    - name: confirm
-      prompt: "Type YES to confirm deletion"
-      private: no
+    protected_users:
+      - root
+      - ansible
+      - admin
+      - administrator
+      - adm
+      - sudo
+      - wheel
+      - ubuntu
+      - debian
+      - sys
+      - system
+      - service
+      - awx
+      - tower
+      - git
+      - deploy
+      - devops
+      - ops
+      - backup
+      - monitoring
+      - prometheus
+      - grafana
+      - nginx
+      - apache
+      - mysql
+      - postgres
 
   tasks:
 
-    - name: Abort if not confirmed
+    - name: Block protected users
       ansible.builtin.fail:
-        msg: "User deletion cancelled by user"
-      when: confirm != "YES"
+        msg: "REFUSED: {{ username }} is maybe a protected system/admin account"
+      when: username in protected_users
 
-    - name: Check if user exists
+    - name: Check user exists
       ansible.builtin.getent:
         database: passwd
         key: "{{ username }}"
       register: user_check
       ignore_errors: yes
 
-    - name: Remove user
+    - name: Delete user
       ansible.builtin.user:
         name: "{{ username }}"
         state: absent
