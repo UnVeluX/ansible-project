@@ -22,8 +22,15 @@
       ansible.builtin.command:
         cmd: chage -d 0 {{ username }}
 
-    - name: Add reconnect reminder
+    - name: Add one-time SSH reconnect message
       ansible.builtin.lineinfile:
         path: "/home/{{ username }}/.bashrc"
-        line: 'echo "Please reconnect your SSH session after changing your password."'
+        line: |
+          if [ ! -f ~/.ssh_reconnect_notice_shown ]; then
+            echo "===================================="
+            echo "Please reconnect your SSH session"
+            echo "after changing your password."
+            echo "===================================="
+            touch ~/.ssh_reconnect_notice_shown
+          fi
         create: yes
