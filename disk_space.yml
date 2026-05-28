@@ -1,13 +1,39 @@
 ---
-- name: Check disk usage
+- name: Display detailed system information
   hosts: all
+  gather_facts: yes
 
   tasks:
 
-    - name: Show disk usage
-      command: df -h
-      register: disk_output
-
-    - name: Print disk usage
+    - name: Show hostname
       debug:
-        var: disk_output.stdout_lines
+        msg: "Hostname: {{ ansible_hostname }}"
+
+    - name: Show operating system
+      debug:
+        msg: "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+
+    - name: Show IP address
+      debug:
+        msg: "IP Address: {{ ansible_default_ipv4.address }}"
+
+    - name: Show CPU information
+      debug:
+        msg:
+          - "CPU Model: {{ ansible_processor[2] }}"
+          - "vCPUs: {{ ansible_processor_vcpus }}"
+          - "Cores: {{ ansible_processor_cores }}"
+
+    - name: Show RAM information
+      debug:
+        msg:
+          - "Total RAM: {{ ansible_memtotal_mb }} MB"
+          - "Free RAM: {{ ansible_memfree_mb }} MB"
+
+    - name: Show mounted disks
+      debug:
+        msg: |
+          Mount: {{ item.mount }}
+          Size: {{ (item.size_total / 1024 / 1024 / 1024) | round(2) }} GB
+          Free: {{ (item.size_available / 1024 / 1024 / 1024) | round(2) }} GB
+      loop: "{{ ansible_mounts }}"

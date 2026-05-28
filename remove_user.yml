@@ -1,0 +1,35 @@
+---
+- name: Remove a Linux user safely
+  hosts: all
+  become: yes
+
+  vars_prompt:
+
+    - name: username
+      prompt: "Enter the username to delete"
+      private: no
+
+    - name: confirm
+      prompt: "Type YES to confirm deletion"
+      private: no
+
+  tasks:
+
+    - name: Abort if not confirmed
+      ansible.builtin.fail:
+        msg: "User deletion cancelled by user"
+      when: confirm != "YES"
+
+    - name: Check if user exists
+      ansible.builtin.getent:
+        database: passwd
+        key: "{{ username }}"
+      register: user_check
+      ignore_errors: yes
+
+    - name: Remove user
+      ansible.builtin.user:
+        name: "{{ username }}"
+        state: absent
+        remove: yes
+      when: user_check is succeeded
