@@ -24,7 +24,7 @@ A collection of Ansible playbooks for Linux infrastructure automation — coveri
 | `ping-update.yml` | Ping all hosts and update the package cache (Debian & RedHat) |
 | `update-grade_reboot.yml` | Full dist-upgrade with automatic reboot if required (Debian) |
 | `install_tools.yml` | Install common CLI tools: vim, nano, curl, git, htop, net-tools (Debian) |
-| `create_user.yml` | Create the `ansible` user, add to sudo, force password change on first login |
+| `create_user.yml` | Create the `ansible` user, add to sudo, force password change on first login, Original password : TempPassword123! |
 | `deploy_ssh_key.yml` | Deploy an SSH public key to the `ansible` user's `authorized_keys` |
 | `backup_home_dir.yml` | Archive `/home` to `/tmp/home_backup.tar.gz` on each target host |
 | `sys_info.yml` | Display a full system report: OS, CPU, RAM, disk, and IP address |
@@ -43,7 +43,7 @@ A collection of Ansible playbooks for Linux infrastructure automation — coveri
 
 > **Important:** Several playbooks assume specific user accounts exist on target hosts.
 
-- `create_user.yml` creates a user named **`ansible`** with sudo privileges.
+- `create_user.yml` creates a user named **`ansible`** with sudo privileges and password : TempPassword123!.
 - `deploy_ssh_key.yml` deploys keys to the **`ansible`** user by default (`ssh_user: ansible`).
 - Some playbooks use `become: yes` and therefore expect the connection user (configured in your inventory or AWX credentials) to have sudo access.
 
