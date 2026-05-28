@@ -10,7 +10,7 @@ A collection of Ansible playbooks for Linux infrastructure automation — coveri
 - [Requirements](#requirements)
 - [User Conventions](#user-conventions)
 - [Getting Started](#getting-started)
-- [AWX / AAP Usage](#awx--aap-usage)
+- [AWX Usage](#awx-usage)
   - [Setting up the deploy\_ssh\_key playbook (Custom Credential Type)](#setting-up-the-deploy_ssh_key-playbook-custom-credential-type)
 - [Playbook Reference](#playbook-reference)
 - [Maintainer](#maintainer)
@@ -100,13 +100,13 @@ ansible-playbook -i inventory sys_info.yml
 
 ---
 
-## AWX / AAP Usage
+## AWX Usage
 
 Add this repository as a **Project** in AWX (source: Git, URL: `https://github.com/UnVeluX/ansible-project`), then create a **Job Template** for each playbook you want to run.
 
 ### Setting up the `deploy_ssh_key` playbook (Custom Credential Type)
 
-`deploy_ssh_key.yml` requires the `ssh_public_key` variable to be passed in at runtime. The cleanest way to handle this in AWX/AAP is to create a **Custom Credential Type** so the key can be stored and injected securely.
+`deploy_ssh_key.yml` requires the `ssh_public_key` variable to be passed in at runtime. The cleanest way to handle this in AWX is to create a **Custom Credential Type** so the key can be stored and injected securely.
 
 #### Step 1 — Create the Custom Credential Type
 
