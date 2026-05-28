@@ -1,39 +1,41 @@
 ---
-- name: Display detailed system information
+- name: Full system report (CPU, RAM, Disk, OS, IP)
   hosts: all
   gather_facts: yes
 
   tasks:
 
-    - name: Show hostname
-      debug:
-        msg: "Hostname: {{ ansible_hostname }}"
+    - name: Get CPU usage
+      ansible.builtin.shell: "top -bn1 | grep 'Cpu(s)' | awk '{print $2 + $4}'"
+      register: cpu_usage
 
-    - name: Show operating system
-      debug:
-        msg: "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
-
-    - name: Show IP address
-      debug:
-        msg: "IP Address: {{ ansible_default_ipv4.address }}"
-
-    - name: Show CPU information
-      debug:
-        msg:
-          - "CPU Model: {{ ansible_processor[2] }}"
-          - "vCPUs: {{ ansible_processor_vcpus }}"
-          - "Cores: {{ ansible_processor_cores }}"
-
-    - name: Show RAM information
-      debug:
-        msg:
-          - "Total RAM: {{ ansible_memtotal_mb }} MB"
-          - "Free RAM: {{ ansible_memfree_mb }} MB"
-
-    - name: Show mounted disks
-      debug:
+    - name: Display system report
+      ansible.builtin.debug:
         msg: |
-          Mount: {{ item.mount }}
-          Size: {{ (item.size_total / 1024 / 1024 / 1024) | round(2) }} GB
-          Free: {{ (item.size_available / 1024 / 1024 / 1024) | round(2) }} GB
-      loop: "{{ ansible_mounts }}"
+          ============================================
+          HOSTNAME: {{ ansible_hostname }}
+          ============================================
+
+          OS INFORMATION:
+          - Distribution: {{ ansible_distribution }}
+          - Version: {{ ansible_distribution_version }}
+          - Kernel: {{ ansible_kernel }}
+
+          NETWORK:
+          - IP Address: {{ ansible_default_ipv4.address | default('N/A') }}
+
+          CPU:
+          - Model: {{ ansible_processor[2] | default(ansible_processor[0]) }}
+          - vCPUs: {{ ansible_processor_vcpus }}
+          - Usage: {{ cpu_usage.stdout }} %
+
+          MEMORY:
+          - Total: {{ ansible_memtotal_mb }} MB
+          - Free: {{ ansible_memfree_mb }} MB
+
+          DISK:
+          {% for item in ansible_mounts %}
+          - Mount: {{ item.mount }}
+            Total: {{ (item.size_total / 1024**3) | round(2) }} GB
+            Free:  {{ (item.size_available / 1024**3) | round(2) }} GB
+          {% endfor %}
