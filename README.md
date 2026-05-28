@@ -36,11 +36,6 @@ A collection of Ansible playbooks for Linux infrastructure automation — coveri
 - Ansible 2.10+
 - Python 3 on the control node
 - Target hosts: Debian/Ubuntu (most playbooks) or RedHat/CentOS (ping-update)
-- The `ansible.posix` collection for `deploy_ssh_key.yml`:
-
-```bash
-ansible-galaxy collection install ansible.posix
-```
 
 ---
 
@@ -50,7 +45,7 @@ ansible-galaxy collection install ansible.posix
 
 - `create_user.yml` creates a user named **`ansible`** with sudo privileges.
 - `deploy_ssh_key.yml` deploys keys to the **`ansible`** user by default (`ssh_user: ansible`).
-- Some playbooks use `become: yes` and therefore expect the connection user (configured in your inventory or AWX credentials) to have sudo access — typically a **`user`** or **`ansible`** account depending on your environment.
+- Some playbooks use `become: yes` and therefore expect the connection user (configured in your inventory or AWX credentials) to have sudo access.
 
 Make sure the target machines have the expected user present (or run `create_user.yml` first as a provisioning step).
 
@@ -92,7 +87,7 @@ ansible-playbook -i inventory update-grade_reboot.yml
 ansible-playbook -i inventory create_user.yml
 
 # Deploy your SSH public key
-ansible-playbook -i inventory deploy_ssh_key.yml -e "ssh_public_key='ssh-ed25519 AAAA...'"
+ansible-playbook -i inventory deploy_ssh_key.yml
 
 # Get a full system report
 ansible-playbook -i inventory sys_info.yml
@@ -158,7 +153,10 @@ Installs a base set of tools on Debian/Ubuntu hosts: `vim`, `nano`, `curl`, `git
 ### `create_user.yml`
 Creates a user named **`ansible`** (customizable via `username` var), adds them to the `sudo` group, sets a pre-hashed password, and forces a password change on first login. Also injects a `.bashrc` message prompting the user to reconnect their SSH session after the password change.
 
-> **Note:** The default password hash in the playbook should be replaced with your own before use. Generate one with:
+> **Note:** The default password hash in the playbook should be replaced with your own before use.
+> Original password : TempPassword123!
+> 
+> Or generate one with:
 > ```bash
 > python3 -c "from passlib.hash import sha512_crypt; print(sha512_crypt.using(rounds=5000).hash('yourpassword'))"
 > ```
