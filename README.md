@@ -11,6 +11,7 @@ A collection of Ansible playbooks for Linux infrastructure automation — coveri
 - [User Conventions](#user-conventions)
 - [Getting Started](#getting-started)
 - [AWX Usage](#awx-usage)
+  - [AWX Deployment](#installing-awx-on-k3s)
   - [Setting up the deploy\_ssh\_key playbook (Custom Credential Type)](#setting-up-the-deploy_ssh_key-playbook-custom-credential-type)
 - [Playbook Reference](#playbook-reference)
 - [Maintainer](#maintainer)
@@ -98,6 +99,10 @@ ansible-playbook -i inventory sys_info.yml
 ## AWX Usage
 
 Add this repository as a **Project** in AWX (source: Git, URL: `https://github.com/UnVeluX/ansible-project`), then create a **Job Template** for each playbook you want to run.
+
+### Installing AWX on K3s
+
+If you want to deploy AWX on a K3s go look for this [guide](https://github.com/UnVeluX/ansible-project/blob/main/awx-k3s/README.md)
 
 ### Setting up the `deploy_ssh_key` playbook (Custom Credential Type)
 
