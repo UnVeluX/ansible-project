@@ -1,0 +1,22 @@
+---
+apiVersion: awx.ansible.com/v1beta1
+kind: AWX
+metadata:
+  name: awx
+spec:
+  postgres_storage_class: local-path
+  postgres_storage_requirements:
+    requests:
+      storage: 8Gi
+  projects_persistence: true
+  garbage_collect_secrets: false
+  projects_existing_claim: awx-projects-claim
+  postgres_init_container_resource_requirements: {}
+  postgres_resource_requirements: {}
+  web_resource_requirements: {}
+  task_resource_requirements: {}
+  ee_resource_requirements: {}
+  service_type: ClusterIP
+  ingress_type: ingress
+  ingress_class_name: traefik
+  hostname: <DOMAINE_A_METTRE>
