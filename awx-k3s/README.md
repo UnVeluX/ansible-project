@@ -83,7 +83,7 @@ kubectl apply -f awx-pvc.yml
 
 ## 📄 5. Créer la déclaration du serveur AWX
 
-> ⚠️ **Remplace `<DOMAINE_A_METTRE>`** par ton domaine réel (ex : `awx.mondomaine.local`). Si besoin d'un serveur DNS vous pouvez utilisé technitium DNS sur docker.
+> ⚠️ **Remplace `<DOMAINE_A_METTRE>`** par ton domaine réel (ex : `awx.mondomaine.local`). Si besoin d'un serveur DNS vous pouvez utiliser technitium DNS sur docker.
 
 ```bash
 tee awx-deployment.yml <<EOF
